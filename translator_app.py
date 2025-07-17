@@ -1,4 +1,4 @@
->>> import streamlit as st
+... import streamlit as st
 ... import json
 ... 
 ... # Load dictionary from file
