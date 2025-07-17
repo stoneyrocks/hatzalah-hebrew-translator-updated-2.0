@@ -1,45 +1,33 @@
-{
-  "Scene Safety": "בטיחות סביבה",
-  "PPE": "בטיחות אישית",
-  "Airway": "נתיב אוויר",
-  "Breathing": "נשימות",
-  "Rate": "קצב",
-  "Deep/ Shallow": "עמוק/ רדוד",
-  "Regularity": "סדירות",
-  "Breathing Sounds": "קולות נשימה",
-  "Circulation": "סירקולציה",
-  "Skin Color": "צבע אור",
-  "Temperature": "טמפרטורה",
-  "Clammy": "לחות",
-  "Blood Pressure": "לחץ דם",
-  "Pulse": "דופק",
-  "Glucose": "בדיקת סוכר",
-  "Pupils": "אישונים",
-  "Allergies": "אלרגיות",
-  "Medications": "תרופות",
-  "Past medical history": "מחלות רקע",
-  "Last oral intake": "מתי/ מה אכלת/ שתית לאחרונה",
-  "Events leading up to present illness": "איך הרגשת בימים האחרונים",
-  "Onset": "מה עשית כשהכאב התחיל",
-  "Provocation": "האם יש תנוחה שמקילה",
-  "Quality": "איך הכאב מרגיש",
-  "Radiates": "הכאב מקרין",
-  "Severity": "סולם כאב",
-  "Time": "לפני כמה זמן הכאב התחיל",
-  "Abdominal Emergency": "מצב חירום בטני",
-  "Anaphylaxis": "תגובה אנפילקטית",
-  "Asthma": "התקף אסטמה",
-  "Cardiac Arrest": "דום לב",
-  "Chest Pain": "כאבים בחזה",
-  "Concussion": "זעזוע מוחי",
-  "COPD": "COPD",
-  "Diabetes": "סכרת",
-  "Difficulty Breathing": "קוצר נשימה",
-  "Dizziness": "סחרחורת",
-  "Fainting": "עלפון",
-  "Heart Attack": "התקף לב",
-  "Seizure": "פרכוסים",
-  "Stroke": "שבץ מוחי",
-  "Vomiting": "הקאות",
-  "Weakness": "חולשה"
-}
+import streamlit as st
+import json
+
+# Load dictionary from file
+with open("terms_dict.json", "r", encoding="utf-8") as f:
+    terms = json.load(f)
+
+# Create reverse dictionary for Hebrew to English
+reverse_terms = {v: k for k, v in terms.items()}
+
+st.title("🚑 English ↔ Hebrew Medical Translator")
+
+sentence = st.text_input("Enter a sentence in English or Hebrew:")
+
+if sentence:
+    words = sentence.strip().lower().split()
+    translations = {}
+
+    for word in words:
+        # Try English to Hebrew
+        result = terms.get(word.title())
+        # If not found, try Hebrew to English
+        if not result:
+            result = reverse_terms.get(word)
+        if result:
+            translations[word] = result
+
+    if translations:
+        st.write("### Translations found:")
+        for w, tr in translations.items():
+            st.write(f"**{w}** → {tr}")
+    else:
+        st.error("❌ No translations found for any word.")
